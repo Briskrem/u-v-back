@@ -21,7 +21,8 @@ router.get('/ticker/:cryptoID', (req, res) => {
         data = ziba.getTicker(name, newRequestTracker)
         res.json({error: 'error'})
     }
-    return res.json({data: 'CRYPTO QUOTES'})
+    // this created headrr can be sent error
+    // return res.json({data: 'CRYPTO QUOTES'})
 })
 
 

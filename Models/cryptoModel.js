@@ -52,7 +52,7 @@ class Crypto{
 
 
 
-    getTicker(name, tracker){
+    getTicker(name, tracker, res){
         let newRequestTracker = tracker
         if(newRequestTracker > 1) {
             console.log(newRequestTracker, wss.readyState, 'WSS READY STATE AT THE TOP B4 ITS INITIALISED')
@@ -60,33 +60,37 @@ class Crypto{
             // READYSTATE AT 2, IT NEEDSS TO BE AT O FOR NEW CONNECTION
             console.log(wss.readyState, 'WSS READY STATE AT THE BOTTOM B4 ITS INITIALISED, because its from the previous instance % TRACKER GREATER THAN 1 SO I JUST CLOSED THE WSS LOOP')
         }
-        function getTicker(name, zz){ 
+        function getTick(name, res){ 
             const cryptoName = name
             // const cryptoName = req.params.cryptoID
             // const subscription = {"action":"subscribe",  "quotes":[`${cryptoName}/USD`], "bars":['*']};
             const subscription = {"action":"subscribe","quotes":[`${cryptoName}/USD`] ,"bars":["BTC/USD"]}
             console.log(cryptoName, subscription, '++++++++++++++++++++++++++++++++++++++++++++')
-    
+            res.json({cryptoName, subscription})
     
             const server = require('../server')
             const io = require('socket.io')(server,{ cors:{ origin:'*'}})
-            io.on('connection', socket =>  console.log('io connected', cryptoName, '================================'))
+            io.on('connection', socket =>  {
+                console.log('io connected', cryptoName, '================================'))
+                res.json({"message":"io connected", cryptoName})
+            }
             io.on('disconnect', reason =>{
                 window.wss.close()
+                
                 socket.removeAllListeners()
-                console.log('io disconnected [CONSEQUESNTIAL]')
+                console.log("io disconnected [CONSEQUESNTIAL]")
             })
 
 
             // connectAlpaca needs to be inside get ticker because aqlpca neeeds that IO object
-            function connectAlpaca(cryptoName, subscription){      
+            function connectAlpaca(cryptoName, subscription, res){      
                 console.log('CRYPTONAME()((()()()()()()', cryptoName, subscription)           
-                setTimeout(()=>{  
+                setTimeout((res)=>{  
                     console.log('ASYNC BEGINS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
-                    myAsync()
+                    myAsync(res)
                     console.log('ASYNC ENDS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
                 }, 500)
-                function myAsync(){ 
+                function myAsync(res){ 
                     wss = new WebSocket(crypto_url)
                     console.log(wss.readyState, 'READY STATE ADDED & INSIDE MYASYNC')
                     wss.addEventListener('open', ws => {
@@ -97,7 +101,8 @@ class Crypto{
                     console.log('chesse')
                     wss.addEventListener('message', ({data})=>{
                         let dataString = Buffer.from(data).toString('utf-8')
-                        io.emit('meta',  `${dataString}`)  
+                        io.emit('meta',  `${dataString}`) 
+                        res.json({dataString}) 
                         // console.log(dataString)                                
                     })  
                     // In the cycle this function responds before MYASYNC runs, because its the previous listener thats responding. 
@@ -111,10 +116,10 @@ class Crypto{
                     }) 
                 }  
             }
-            connectAlpaca(cryptoName, subscription)    
+            connectAlpaca(cryptoName, subscription, res)    
             console.log('this async function should return at this point but it returns later on')
         }
-        getTicker(name) 
+        getTick(name, res) 
         return {message: 'success'}
     }
 }

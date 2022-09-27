@@ -16,7 +16,7 @@ router.get('/ticker/:cryptoID', (req, res) => {
     if(!ziba){
         ziba = new Crypto()
         res.json({ziba: `${ziba}`})
-        data = ziba.getTicker(name, newRequestTracker)
+        data = ziba.getTicker(name, newRequestTracker, res)
     }else{
         data = ziba.getTicker(name, newRequestTracker)
         res.json({error: 'error'})

@@ -15,14 +15,18 @@ router.get('/ticker/:cryptoID', (req, res) => {
     let data;
     if(!ziba){
         ziba = new Crypto()
-        res.json({ziba: `${ziba}`})
-        data = ziba.getTicker(name, newRequestTracker, res)
+        // res.json({ziba: `${ziba}`})
+        data = ziba.getTicker(name, newRequestTracker)
+        console.log(data, '************************************')
+        // res.send({data})
+        // res.json({ziba: `${ziba}`})
+        // return res.json({data})
     }else{
         data = ziba.getTicker(name, newRequestTracker)
         res.json({error: 'error'})
     }
     // this created headrr can be sent error
-    // return res.json({data: 'CRYPTO QUOTES'})
+    return res.json({data: 'CRYPTO QUOTES'})
 })
 
 
@@ -32,7 +36,7 @@ router.get('/stats/:cryptoID', async (req, res) => {
     console.log(queries, cryptoID, 'inside stats route')
     try{
      
-        const data = await Crypto.getGraph(cryptoID, queries)
+        const data = await Crypto.getGraph(cryptoID, queries, res)
         // res.send({data})
         return res.json({data})
     }catch(e){

@@ -53,6 +53,7 @@ class Crypto{
 
 
     getTicker(name, tracker){
+        
         let newRequestTracker = tracker
         if(newRequestTracker > 1) {
             console.log(newRequestTracker, wss.readyState, 'WSS READY STATE AT THE TOP B4 ITS INITIALISED')

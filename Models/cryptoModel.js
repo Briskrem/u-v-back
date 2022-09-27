@@ -61,7 +61,7 @@ class Crypto{
             // READYSTATE AT 2, IT NEEDSS TO BE AT O FOR NEW CONNECTION
             console.log(wss.readyState, 'WSS READY STATE AT THE BOTTOM B4 ITS INITIALISED, because its from the previous instance % TRACKER GREATER THAN 1 SO I JUST CLOSED THE WSS LOOP')
         }
-        function getTicker(name, zz){ 
+        function getTicker(name){ 
             const cryptoName = name
             // const cryptoName = req.params.cryptoID
             // const subscription = {"action":"subscribe",  "quotes":[`${cryptoName}/USD`], "bars":['*']};
